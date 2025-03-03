@@ -1,8 +1,5 @@
 package itu.jca.eval.test.coworking.models;
 
-import org.hibernate.annotations.ManyToAny;
-
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,11 +25,13 @@ public class Account {
     @Column(nullable = false)
     String password;
 
-    @ManyToOne(fetch = FetchType.LAZY , optional = false)
     @JoinColumn(name = "idUtilisateur" , nullable = false)
     Utilisateur utilisateur;
 
-    @ManyToOne(fetch = FetchType.LAZY , optional = false)
     @JoinColumn(name = "idRole" , nullable = false)
     RoleUtilisateur role;
+
+    public boolean checkPassword(String password){
+        return getPassword().equals(password);
+    }
 }
