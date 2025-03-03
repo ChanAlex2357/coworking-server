@@ -13,7 +13,7 @@ import lombok.Data;
 @Table(name = "roleutilisateur")
 public class RoleUtilisateur {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     String id;
 
     @Column(nullable =  false)
