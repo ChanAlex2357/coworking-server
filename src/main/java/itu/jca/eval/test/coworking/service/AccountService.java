@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import ch.qos.logback.classic.pattern.Util;
 import itu.jca.eval.test.coworking.models.Account;
 import itu.jca.eval.test.coworking.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
