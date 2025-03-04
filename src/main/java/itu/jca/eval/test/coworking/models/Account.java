@@ -31,11 +31,11 @@ public class Account {
     String password;
 
     @ManyToOne
-    @JoinColumn(name = "idUtilisateur", nullable = false)
+    @JoinColumn(name = "idutilisateur", nullable = false)
     private Utilisateur utilisateur;
 
     @ManyToOne
-    @JoinColumn(name = "idRole", nullable = false)
+    @JoinColumn(name = "idrole", nullable = false)
     private RoleUtilisateur role;
 
     public boolean checkPassword(String password){

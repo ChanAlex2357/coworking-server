@@ -29,4 +29,8 @@ public class AccountService {
 
         return account;
     }
+
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
 }
