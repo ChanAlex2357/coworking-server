@@ -1,6 +1,7 @@
 CREATE TABLE Utilisateur(
    id VARCHAR(255) ,
    nom VARCHAR(255) ,
+   contact VARCHAR(255)  NOT NULL,
    PRIMARY KEY(id)
 );
 
@@ -49,14 +50,6 @@ CREATE TABLE PrixEspace(
    idEspace VARCHAR(255)  NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(idEspace) REFERENCES Espace(id)
-);
-
-CREATE TABLE UtilisateurContact(
-   id VARCHAR(255) ,
-   contact VARCHAR(255)  NOT NULL,
-   idUtilisateur VARCHAR(255)  NOT NULL,
-   PRIMARY KEY(id),
-   FOREIGN KEY(idUtilisateur) REFERENCES Utilisateur(id)
 );
 
 CREATE TABLE Reservation(
