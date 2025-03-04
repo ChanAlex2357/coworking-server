@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Entity
@@ -14,8 +16,13 @@ import lombok.Data;
 @Table(name = "account")
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq_generator")
+    @SequenceGenerator(
+        name = "account_seq_generator",
+        sequenceName = "get_account_seq",
+        allocationSize = 1
+    )
+    private String id;
 
     @Column(nullable = false)
     String login;
@@ -23,11 +30,13 @@ public class Account {
     @Column(nullable = false)
     String password;
 
-    @JoinColumn(name = "idUtilisateur" , nullable = false)
-    Utilisateur utilisateur;
+    @ManyToOne
+    @JoinColumn(name = "idUtilisateur", nullable = false)
+    private Utilisateur utilisateur;
 
-    @JoinColumn(name = "idRole" , nullable = false)
-    RoleUtilisateur role;
+    @ManyToOne
+    @JoinColumn(name = "idRole", nullable = false)
+    private RoleUtilisateur role;
 
     public boolean checkPassword(String password){
         return getPassword().equals(password);
