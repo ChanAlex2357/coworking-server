@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.SequenceGenerator;
 import lombok.Data;
 
 @Data
@@ -14,12 +13,7 @@ import lombok.Data;
 @Table(name = "roleutilisateur")
 public class RoleUtilisateur {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_user_seq_generator")
-    @SequenceGenerator(
-        name = "role_user_seq_generator",
-        sequenceName = "get_role_user_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)

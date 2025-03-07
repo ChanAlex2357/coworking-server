@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import itu.jca.eval.test.coworking.models.Espace;
 import itu.jca.eval.test.coworking.repository.EspaceRepository;
@@ -24,6 +25,9 @@ public class EspaceService {
     }
 
     public Espace save(Espace espace) {
+        System.out.println(
+            espace.getNom()
+        );
         return espaceRepository.save(espace);
     }
 
@@ -37,5 +41,10 @@ public class EspaceService {
             return espaceRepository.save(espace);
         }
         throw new RuntimeException("Espace non trouvé avec l'id: " + id);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Espace> findByNom(String nom) {
+        return espaceRepository.findByNom(nom);
     }
 } 

@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.SequenceGenerator;
 import lombok.Data;
 
 @Data
@@ -14,14 +13,12 @@ import lombok.Data;
 @Table(name = "utilisateur")
 public class Utilisateur {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "utilisateur_seq_generator")
-    @SequenceGenerator(
-        name = "utilisateur_seq_generator",
-        sequenceName = "get_utilisateur_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)
     String nom;
+
+    @Column(nullable = false)
+    String contact;
 }

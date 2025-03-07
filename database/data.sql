@@ -1,4 +1,3 @@
-
 -- Insertion des rôles
 INSERT INTO RoleUtilisateur (id, libelle) VALUES 
     (get_role_user_seq(), 'ADMIN'),
@@ -41,3 +40,16 @@ SELECT
     r.id
 FROM Utilisateur u, RoleUtilisateur r 
 WHERE u.nom = 'Marie Cliente' AND r.libelle = 'CLIENT';
+
+-- Insertion des créneaux horaires
+INSERT INTO Creneau (id, heureDebut, heureFin) VALUES 
+    (get_creneau_seq(), '08:00:00', '09:00:00'),
+    (get_creneau_seq(), '09:00:00', '10:00:00'),
+    (get_creneau_seq(), '10:00:00', '11:00:00'),
+    (get_creneau_seq(), '11:00:00', '12:00:00'),
+    (get_creneau_seq(), '12:00:00', '13:00:00'),
+    (get_creneau_seq(), '13:00:00', '14:00:00'),
+    (get_creneau_seq(), '14:00:00', '15:00:00'),
+    (get_creneau_seq(), '15:00:00', '16:00:00'),
+    (get_creneau_seq(), '16:00:00', '17:00:00'),
+    (get_creneau_seq(), '17:00:00', '18:00:00');

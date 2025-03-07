@@ -36,6 +36,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION trigger_espace_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_espace_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER espace_id_trigger
+    BEFORE INSERT ON espace
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_espace_id();
+
 -- Pour Option
 CREATE SEQUENCE IF NOT EXISTS option_seq;
 CREATE OR REPLACE FUNCTION get_option_seq()
@@ -91,7 +106,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Pour PrixEspace
-CREATE SEQUENCE IF NOT EXISTS prix_espace_seq;
+CREATE SEQUENCE prix_espace_seq;
+
 CREATE OR REPLACE FUNCTION get_prix_espace_seq()
 RETURNS text AS $$
 BEGIN
@@ -99,11 +115,186 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION trigger_prix_espace_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_prix_espace_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prix_espace_id_trigger
+    BEFORE INSERT ON prixespace
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_prix_espace_id();
+
 -- Pour OptionPrix
-CREATE SEQUENCE IF NOT EXISTS option_prix_seq;
+CREATE SEQUENCE option_prix_seq;
+
 CREATE OR REPLACE FUNCTION get_option_prix_seq()
 RETURNS text AS $$
 BEGIN
     RETURN 'OPX_' || nextval('option_prix_seq')::text;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION trigger_option_prix_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_option_prix_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER option_prix_id_trigger
+    BEFORE INSERT ON optionprix
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_option_prix_id();
+
+-- Pour Account
+CREATE OR REPLACE FUNCTION trigger_account_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_account_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER account_id_trigger
+    BEFORE INSERT ON account
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_account_id();
+
+-- Pour Creneau
+CREATE OR REPLACE FUNCTION trigger_creneau_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_creneau_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER creneau_id_trigger
+    BEFORE INSERT ON creneau
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_creneau_id();
+
+-- Pour Option
+CREATE OR REPLACE FUNCTION trigger_option_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_option_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER option_id_trigger
+    BEFORE INSERT ON option
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_option_id();
+
+-- Pour Paiement
+CREATE OR REPLACE FUNCTION trigger_paiement_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_paiement_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER paiement_id_trigger
+    BEFORE INSERT ON paiement
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_paiement_id();
+
+-- Pour Reservation
+CREATE OR REPLACE FUNCTION trigger_reservation_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_reservation_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER reservation_id_trigger
+    BEFORE INSERT ON reservation
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_reservation_id();
+
+-- Pour ReservationDetails
+CREATE OR REPLACE FUNCTION trigger_reservation_details_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_reservation_details_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER reservation_details_id_trigger
+    BEFORE INSERT ON reservationdetails
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_reservation_details_id();
+
+-- Pour ReservationOption
+CREATE OR REPLACE FUNCTION trigger_reservation_option_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_reservation_option_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER reservation_option_id_trigger
+    BEFORE INSERT ON reservationoption
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_reservation_option_id();
+
+-- Pour RoleUtilisateur
+CREATE OR REPLACE FUNCTION trigger_role_utilisateur_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_role_user_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER role_utilisateur_id_trigger
+    BEFORE INSERT ON roleutilisateur
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_role_utilisateur_id();
+
+-- Pour Utilisateur
+CREATE OR REPLACE FUNCTION trigger_utilisateur_id()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.id IS NULL THEN
+        NEW.id = get_utilisateur_seq();
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER utilisateur_id_trigger
+    BEFORE INSERT ON utilisateur
+    FOR EACH ROW
+    EXECUTE FUNCTION trigger_utilisateur_id();

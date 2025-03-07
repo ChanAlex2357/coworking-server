@@ -76,8 +76,8 @@ CREATE TABLE ReservationOption(
 
 CREATE TABLE Creneau(
    id VARCHAR(255) ,
-   heureDebut INTEGER NOT NULL,
-   heureFin INTEGER NOT NULL,
+   heureDebut TIME NOT NULL,
+   heureFin TIME NOT NULL,
    PRIMARY KEY(id)
 );
 

@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
@@ -16,12 +15,7 @@ import lombok.Data;
 @Table(name = "account")
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq_generator")
-    @SequenceGenerator(
-        name = "account_seq_generator",
-        sequenceName = "get_account_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)

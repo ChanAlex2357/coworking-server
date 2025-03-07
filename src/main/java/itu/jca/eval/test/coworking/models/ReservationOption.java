@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -18,12 +17,7 @@ import lombok.Data;
 @Table(name = "reservationoption")
 public class ReservationOption {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_option_seq_generator")
-    @SequenceGenerator(
-        name = "reservation_option_seq_generator",
-        sequenceName = "get_reservation_option_seq",
-        allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(nullable = false)

@@ -5,15 +5,28 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import itu.jca.eval.test.coworking.models.Option;
 import itu.jca.eval.test.coworking.repository.OptionRepository;
+import itu.jca.eval.test.coworking.models.PrixOption;
 
 @Service
 public class OptionService {
     
     @Autowired
     private OptionRepository optionRepository;
+    
+    @Autowired
+    private PrixOptionService prixOptionService;
+
+    public void saveOptionWithPrice(String[] values) {
+        Option option = new Option(values);
+        option = save(option);
+        System.out.println("--- Option saved!---");
+        PrixOption prixOption = new PrixOption(option, values[2]);
+        prixOptionService.save(prixOption);
+    }
 
     public List<Option> findAll() {
         return optionRepository.findAll();
@@ -24,6 +37,7 @@ public class OptionService {
     }
 
     public Option save(Option option) {
+        System.out.println("Oprtion on saving ...");
         return optionRepository.save(option);
     }
 
