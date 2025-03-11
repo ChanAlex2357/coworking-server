@@ -55,6 +55,7 @@ CREATE TABLE PrixEspace(
 CREATE TABLE Reservation(
    id VARCHAR(255) ,
    dateReservation DATE NOT NULL,
+   heureDebut TIME NOT NULL,
    duree INTEGER NOT NULL,
    montant NUMERIC(15,2)   NOT NULL,
    idClient VARCHAR(255)  NOT NULL,

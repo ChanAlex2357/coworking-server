@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,12 +145,12 @@ public class ImportController {
             return ResponseEntity.badRequest().body("Erreur lors de la lecture du fichier: " + e.getMessage());
         }
 
-        if (!errors.isEmpty()) {
-            return ResponseEntity.badRequest().body(new ImportResponse(
-                "Import terminé avec des erreurs",
-                errors
-            ));
-        }
+            if (!errors.isEmpty()) {
+                return ResponseEntity.badRequest().body(new ImportResponse(
+                    "Import terminé avec des erreurs",
+                    errors
+                ));
+            }
 
         return ResponseEntity.ok("Import option réussi");
     }
@@ -188,30 +190,34 @@ public class ImportController {
                     // Recherche de l'espace
                     Espace espace = espaceService.findByNom(espaceName)
                         .orElseThrow(() -> new RuntimeException("Espace non trouvé: " + espaceName));
-
+                    System.out.println("Espace ok");
                     // Recherche ou création de l'utilisateur
                     Utilisateur client = utilisateurService.findByContact(clientContact)
-                        .orElseGet(() -> {
-                            Utilisateur newClient = new Utilisateur();
-                            newClient.setContact(clientContact);
-                            return utilisateurService.save(newClient);
-                        });
+                    .orElseGet(() -> {
+                        Utilisateur newClient = new Utilisateur();
+                        newClient.setContact(clientContact);
+                        return utilisateurService.save(newClient);
+                    });
+                    System.out.println("Utilisateur ok");
 
-                    // Parse de la date
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                    LocalDate dateReservation = LocalDate.parse(dateStr, formatter);
+                    // Parse de la date et de l'heure
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    LocalDate dateReservation = LocalDate.parse(dateStr, dateFormatter);
+                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+                    LocalTime heureDebutTime = LocalTime.parse(heureDebut, timeFormatter);
 
                     // Création de la réservation
                     Reservation reservation = new Reservation();
                     reservation.setId(ref);
-                    reservation.setDateReservation(dateReservation);
+                    reservation.setDateReservation(Date.valueOf(dateReservation));
+                    reservation.setHeureDebut(Time.valueOf(heureDebutTime));
                     reservation.setDuree(duree);
                     reservation.setClient(client);
                     reservation.setEspace(espace);
 
                     // Calcul du montant de base (prix de l'espace * durée)
                     PrixEspace prixEspace = prixEspaceService.findCurrentPrixEspace(espace);
-                    BigDecimal montantBase = BigDecimal.valueOf(prixEspace.getPrixHeure()).multiply(BigDecimal.valueOf(duree));
+                    double montantBase = prixEspace.getPrixHeure() * duree;
                     reservation.setMontant(montantBase);
 
                     // Sauvegarde de la réservation
@@ -229,12 +235,12 @@ public class ImportController {
                             ReservationOption resOption = new ReservationOption();
                             resOption.setOption(option);
                             resOption.setReservation(reservation);
-                            resOption.setPu(BigDecimal.valueOf(prixOption.getPu()));
+                            resOption.setPu(prixOption.getPu());
                             
                             reservationOptionService.save(resOption);
 
                             // Mise à jour du montant total
-                            reservation.setMontant(reservation.getMontant().add(BigDecimal.valueOf(prixOption.getPu())));
+                            reservation.setMontant(reservation.getMontant()+ prixOption.getPu());
                         }
                         // Mise à jour du montant final
                         reservationService.save(reservation);
@@ -246,6 +252,13 @@ public class ImportController {
             }
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erreur lors de la lecture du fichier: " + e.getMessage());
+        }
+
+        if (!errors.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ImportResponse(
+                "Import terminé avec des erreurs",
+                errors
+            ));
         }
         return ResponseEntity.ok("Import des réservations réussi");
     }

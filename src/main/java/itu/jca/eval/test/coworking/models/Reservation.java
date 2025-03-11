@@ -1,12 +1,13 @@
 package itu.jca.eval.test.coworking.models;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -18,17 +19,19 @@ import lombok.Data;
 @Table(name = "reservation")
 public class Reservation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "dateReservation", nullable = false)
-    private LocalDate dateReservation;
+    private Date dateReservation;
+
+    @Column(name = "heureDebut", nullable = false)
+    private Time heureDebut;
 
     @Column(nullable = false)
     private Integer duree;
 
     @Column(nullable = false)
-    private BigDecimal montant;
+    private double montant;
 
     @ManyToOne
     @JoinColumn(name = "idClient", nullable = false)
