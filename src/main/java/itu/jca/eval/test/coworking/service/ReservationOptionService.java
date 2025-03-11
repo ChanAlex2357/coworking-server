@@ -7,12 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import itu.jca.eval.test.coworking.models.ReservationOption;
+import itu.jca.eval.test.coworking.models.Option;
+import itu.jca.eval.test.coworking.models.PrixOption;
 import itu.jca.eval.test.coworking.models.Reservation;
 import itu.jca.eval.test.coworking.repository.ReservationOptionRepository;
 
 @Service
 public class ReservationOptionService {
-    
+    @Autowired
+    private OptionService optionService;
+    @Autowired
+    private PrixOptionService prixOptionService;
     @Autowired
     private ReservationOptionRepository reservationOptionRepository;
 
@@ -42,5 +47,35 @@ public class ReservationOptionService {
             return reservationOptionRepository.save(reservationOption);
         }
         throw new RuntimeException("Option de réservation non trouvée avec l'id: " + id);
+    }
+
+    public ReservationOption save(Option option,Reservation reservation) throws Exception {
+        PrixOption prixOption = prixOptionService.findCurrentOptionPrix(option);
+        ReservationOption resOption = new ReservationOption();
+        resOption.setOption(option);
+        resOption.setReservation(reservation);
+        resOption.setPu(prixOption.getPu());
+        save(resOption);
+        // Mise à jour du montant total
+        reservation.setMontant(reservation.getMontant()+ prixOption.getPu());
+        return resOption;
+    }
+    
+    public ReservationOption[] loadReservationOptions(String optionsStr,Reservation reservation) throws Exception {
+        // Traitement des options
+        ReservationOption[] reservationOptions = null;
+        if (!optionsStr.isEmpty() && !optionsStr.equals("\"\"")) {
+            String[] optionIds = optionsStr.replace("\"", "").split(",");
+            reservationOptions = new ReservationOption[optionIds.length];
+            System.out.println("OPTIONS LENGTH : "+optionIds.length);
+            for (int i = 0; i < optionIds.length; i+=1) {
+                String optionId = optionIds[i].trim().toUpperCase();
+                Option option = 
+                    optionService.findById(optionId)
+                    .orElseThrow(() -> new RuntimeException("Option non trouvée: " + optionId));
+                reservationOptions[i] = save(option,reservation);
+            }
+        }
+        return reservationOptions;
     }
 } 

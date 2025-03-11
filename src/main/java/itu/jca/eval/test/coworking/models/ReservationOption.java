@@ -22,10 +22,10 @@ public class ReservationOption {
     private double pu;
 
     @ManyToOne
-    @JoinColumn(name = "idOption", nullable = false)
+    @JoinColumn(name = "idoption", nullable = false)
     private Option option;
 
     @ManyToOne
-    @JoinColumn(name = "idReservation", nullable = false)
+    @JoinColumn(name = "idreservation", nullable = false)
     private Reservation reservation;
 } 

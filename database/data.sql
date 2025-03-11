@@ -5,7 +5,7 @@ INSERT INTO RoleUtilisateur (id, libelle) VALUES
 
 -- Insertion des utilisateurs
 INSERT INTO Utilisateur (id, nom,contact) VALUES 
-    (get_utilisateur_seq(), 'Admin Principal','11111111'),    -- admin
+    (get_utilisateur_seq(), 'Admin Principal','0381034567'),    -- admin
     (get_utilisateur_seq(), 'Jean Client','22222222'),        -- client 1
     (get_utilisateur_seq(), 'Marie Cliente','33333333');      -- client 2
 

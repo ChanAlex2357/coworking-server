@@ -1,5 +1,7 @@
 package itu.jca.eval.test.coworking.models;
 
+import java.sql.Time;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,8 +19,8 @@ public class Creneau {
     private String id;
 
     @Column(name = "heureDebut", nullable = false)
-    private Integer heureDebut;
+    private Time heureDebut;
 
     @Column(name = "heureFin", nullable = false)
-    private Integer heureFin;
+    private Time heureFin;
 } 
