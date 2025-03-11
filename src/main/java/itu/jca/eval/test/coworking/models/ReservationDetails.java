@@ -1,7 +1,5 @@
 package itu.jca.eval.test.coworking.models;
 
-import java.math.BigDecimal;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,13 +19,13 @@ public class ReservationDetails {
     private String id;
 
     @Column(nullable = false)
-    private BigDecimal pu;
+    private double pu;
 
     @ManyToOne
-    @JoinColumn(name = "idCreneau", nullable = false)
+    @JoinColumn(name = "idcreneau", nullable = false)
     private Creneau creneau;
 
     @ManyToOne
-    @JoinColumn(name = "idReservation", nullable = false)
+    @JoinColumn(name = "idreservation", nullable = false)
     private Reservation reservation;
 } 

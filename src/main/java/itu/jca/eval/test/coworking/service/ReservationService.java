@@ -25,6 +25,8 @@ public class ReservationService {
     private PrixEspaceService prixEspaceService;
 
     @Autowired
+    private ReservationDetailsService reservationDetailsService;
+    @Autowired
     private ReservationRepository reservationRepository;
 
     public List<Reservation> findAll() {
@@ -121,6 +123,7 @@ public class ReservationService {
         reservation = save(reservation);
         reservationOptionService.loadReservationOptions(optionsStr,reservation);
         reservation = save(reservation);
+        reservationDetailsService.loadReservationDetails(reservation);
         return reservation;
     }
 } 

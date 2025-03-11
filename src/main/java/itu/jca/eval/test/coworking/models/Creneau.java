@@ -18,9 +18,9 @@ public class Creneau {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
-    @Column(name = "heureDebut", nullable = false)
+    @Column(name = "heuredebut", nullable = false)
     private Time heureDebut;
 
-    @Column(name = "heureFin", nullable = false)
+    @Column(name = "heurefin", nullable = false)
     private Time heureFin;
 } 

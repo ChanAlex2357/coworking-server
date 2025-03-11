@@ -35,4 +35,12 @@ public class TimeUtils {
             throw new IllegalArgumentException("Format de date invalide. Utilisez le format dd/MM/yyyy : " + date);
         }
     }
+
+    public static Time add(Time time , int hour,int min , int sec) {
+        LocalTime newTime = time.toLocalTime();
+        newTime = newTime.plusHours(hour);
+        newTime = newTime.plusMinutes(min);
+        newTime = newTime.plusSeconds(sec);
+        return Time.valueOf(newTime);
+    }
 }
