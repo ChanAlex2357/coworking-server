@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import itu.jca.eval.test.coworking.models.Paiement;
 import itu.jca.eval.test.coworking.models.Reservation;
 import itu.jca.eval.test.coworking.repository.PaiementRepository;
+import itu.jca.eval.test.coworking.utils.ImportUtils;
 
 @Service
 public class PaiementService {
-    
+    @Autowired
+    private ReservationService reservationService;
     @Autowired
     private PaiementRepository paiementRepository;
 
@@ -42,5 +44,14 @@ public class PaiementService {
             return paiementRepository.save(paiement);
         }
         throw new RuntimeException("Paiement non trouvé avec l'id: " + id);
+    }
+
+    public void loadPaiement(String line) throws Exception {
+        String[] values = ImportUtils.splitLine(line,",",3);
+        Paiement paiement = new Paiement();
+        paiement.setId(values[0]);
+        paiement.setDatePaiement(values[2]);
+        paiement.setReservation(reservationService.findById(values[1]).orElseThrow(() -> new RuntimeException("Reservation non trouvée avec l'id: " + values[1])));
+        save(paiement);
     }
 } 

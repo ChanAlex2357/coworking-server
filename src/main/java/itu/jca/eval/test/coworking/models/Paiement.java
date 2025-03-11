@@ -1,8 +1,6 @@
 package itu.jca.eval.test.coworking.models;
 
 import java.util.Date;
-
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

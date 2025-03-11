@@ -21,6 +21,7 @@ import itu.jca.eval.test.coworking.service.EspaceService;
 import itu.jca.eval.test.coworking.service.PrixEspaceService;
 import itu.jca.eval.test.coworking.service.OptionService;
 import itu.jca.eval.test.coworking.service.ReservationService;
+import itu.jca.eval.test.coworking.service.PaiementService;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -41,6 +42,9 @@ public class ImportController {
 
     @Autowired
     private ReservationService reservationService;
+
+    @Autowired
+    private PaiementService paiementService;
 
     @PostMapping("/espace")
     public ResponseEntity<?> importEspace(@RequestParam("file") MultipartFile file) {
@@ -169,6 +173,37 @@ public class ImportController {
             ));
         }
         return ResponseEntity.ok("Import des réservations réussi");
+    }
+
+    @PostMapping("/paiement")
+    @Transactional
+    public ResponseEntity<?> importPaiement(@RequestParam("file") MultipartFile file) {
+        List<String> errors = new ArrayList<>();
+        int lineNumber = 1;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
+            String line = br.readLine();
+            if (line == null) {
+                return ResponseEntity.badRequest().body("Le fichier est vide");
+            }
+            while ((line = br.readLine()) != null) {
+                lineNumber++;
+                try {
+                    paiementService.loadPaiement(line);
+                } catch (Exception e) {
+                    errors.add("Ligne " + lineNumber + ": " + e.getMessage());
+                }
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Erreur lors de la lecture du fichier: " + e.getMessage());
+        }
+
+        if (!errors.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ImportResponse(
+                "Import terminé avec des erreurs",
+                errors
+            ));
+        }
+        return ResponseEntity.ok("Import des paiements réussi");
     }
 
 }
