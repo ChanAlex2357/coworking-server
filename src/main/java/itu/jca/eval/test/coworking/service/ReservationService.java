@@ -120,10 +120,31 @@ public class ReservationService {
         }
         setEspaceFromName(espaceName, reservation);
         // Sauvegarde de la réservation
-        reservation = save(reservation);
+        reservation = createReservation(reservation);
+        reservationDetailsService.loadReservationDetails(reservation);
         reservationOptionService.loadReservationOptions(optionsStr,reservation);
         reservation = save(reservation);
-        reservationDetailsService.loadReservationDetails(reservation);
         return reservation;
+    }
+
+
+    public Reservation createReservation(Reservation reservation) {
+        reservation.setEtat(10);
+        return save(reservation);
+    }
+
+    public Reservation valider(Reservation reservation) {
+        reservation.setEtat(11);
+        return save(reservation);
+    }
+
+    public Reservation payer(Reservation reservation) {
+        reservation.setEtat(12);
+        return save(reservation);
+    }
+
+    public Reservation validerPaiementReservation(Reservation reservation) {
+        reservation.setEtat(13);
+        return save(reservation);
     }
 } 

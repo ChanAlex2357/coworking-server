@@ -23,6 +23,9 @@ public class Paiement {
     @JoinColumn(name = "idreservation", nullable = false)
     private Reservation reservation;
 
+    @Column(nullable = false)
+    private int etat;
+
     public void setId(String id) {
         this.id = id;
     }
@@ -37,5 +40,9 @@ public class Paiement {
 
     public void setDatePaiement(String datePaiement) {
         setDatePaiement(TimeUtils.formatDate(datePaiement));
+    }
+    
+    public void setEtat(int etat) {
+        this.etat = etat;
     }
 } 

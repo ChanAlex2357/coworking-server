@@ -38,6 +38,13 @@ public class Reservation{
     @JoinColumn(name = "idespace", nullable = false)
     private Espace espace;
 
+    @Column(nullable = false)
+    private int etat;
+
+    public Reservation(){
+        setEtat(1);
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -100,6 +107,15 @@ public class Reservation{
         double montantDouble = Double.parseDouble(montant);
         setMontant(montantDouble);
     }
-    
 
+    public void setEtat(int etat) {
+        if (etat <=0) {
+            throw new IllegalArgumentException("L'etat doit etre positive");
+        }
+        this.etat = etat;
+    }
+    
+    public void setEtat(String etat){
+        setEtat(Integer.parseInt(etat));
+    }
 } 
