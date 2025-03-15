@@ -1,8 +1,6 @@
 package itu.jca.eval.test.coworking.service;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +29,8 @@ public class OptionService {
         return optionRepository.findAll();
     }
 
-    public Optional<Option> findById(String id) {
-        return optionRepository.findById(id);
+    public Option findById(String id) {
+        return optionRepository.findById(id).orElseThrow(() -> new RuntimeException("Option non trouvée: " + id));
     }
 
     public Option save(Option option) {

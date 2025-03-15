@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import itu.jca.eval.test.coworking.models.Espace;
+import itu.jca.eval.test.coworking.models.Option;
 import itu.jca.eval.test.coworking.models.PrixEspace;
 import itu.jca.eval.test.coworking.models.Reservation;
 import itu.jca.eval.test.coworking.models.Utilisateur;
@@ -15,6 +16,7 @@ import itu.jca.eval.test.coworking.utils.ImportUtils;
 
 @Service
 public class ReservationService {
+
     @Autowired
     private ReservationOptionService reservationOptionService;
     @Autowired
@@ -120,17 +122,33 @@ public class ReservationService {
         }
         setEspaceFromName(espaceName, reservation);
         // Sauvegarde de la réservation
-        reservation = createReservation(reservation);
-        reservationDetailsService.loadReservationDetails(reservation);
-        reservationOptionService.loadReservationOptions(optionsStr,reservation);
-        reservation = save(reservation);
+        reservation = createReservation(reservation, optionsStr);
         return reservation;
     }
 
-
+    public Reservation createReservation(Reservation reservation,String options) throws Exception{
+        reservation = createReservation(reservation);
+        reservationOptionService.loadReservationOptions(options,reservation);
+        reservation = save(reservation);
+        return reservation;
+    }
+    
+    public Reservation createReservation(Reservation reservation , Option[] options) throws Exception {
+        reservation = createReservation(reservation);
+        reservationOptionService.createReservationOptions(options, reservation);
+        return save(reservation);
+    }
+    public Reservation createReservation(Reservation reservation , String[] options) throws Exception {
+        reservation = createReservation(reservation);
+        reservationOptionService.createReservationOptions(options, reservation);
+        return save(reservation);
+    }
+    
     public Reservation createReservation(Reservation reservation) {
         reservation.setEtat(10);
-        return save(reservation);
+        reservation = save(reservation);
+        reservationDetailsService.loadReservationDetails(reservation);
+        return reservation;
     }
 
     public Reservation valider(Reservation reservation) {
