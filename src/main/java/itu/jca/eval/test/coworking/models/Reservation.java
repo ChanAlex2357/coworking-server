@@ -2,9 +2,13 @@ package itu.jca.eval.test.coworking.models;
 
 import java.sql.Date;
 import java.sql.Time;
+
+import itu.jca.eval.test.coworking.enums.ReservationEtat;
 import itu.jca.eval.test.coworking.utils.TimeUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -39,11 +43,10 @@ public class Reservation{
     private Espace espace;
 
     @Column(nullable = false)
-    private int etat;
+    @Enumerated(EnumType.ORDINAL)
+    private ReservationEtat etat;
 
-    public Reservation(){
-        setEtat(1);
-    }
+    public Reservation(){}
 
     public void setId(String id) {
         this.id = id;
@@ -108,14 +111,13 @@ public class Reservation{
         setMontant(montantDouble);
     }
 
-    public void setEtat(int etat) {
-        if (etat <=0) {
-            throw new IllegalArgumentException("L'etat doit etre positive");
-        }
+    public void setEtat(ReservationEtat etat) {
         this.etat = etat;
     }
-    
-    public void setEtat(String etat){
-        setEtat(Integer.parseInt(etat));
-    }
+
+    public void reserver() {setEtat(ReservationEtat.RESERVER);}
+    public void valider() {setEtat(ReservationEtat.RESERVER);}
+    public void payer() {setEtat(ReservationEtat.PAYER);}
+    public void validerPaiement(){setEtat(ReservationEtat.VALIDER_PAIEMENT);}
+
 } 

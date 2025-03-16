@@ -145,24 +145,24 @@ public class ReservationService {
     }
     
     public Reservation createReservation(Reservation reservation) {
-        reservation.setEtat(10);
+        reservation.reserver();
         reservation = save(reservation);
         reservationDetailsService.loadReservationDetails(reservation);
         return reservation;
     }
 
     public Reservation valider(Reservation reservation) {
-        reservation.setEtat(11);
+        reservation.valider();
         return save(reservation);
     }
 
     public Reservation payer(Reservation reservation) {
-        reservation.setEtat(12);
+        reservation.payer();
         return save(reservation);
     }
 
     public Reservation validerPaiementReservation(Reservation reservation) {
-        reservation.setEtat(13);
+        reservation.validerPaiement();
         return save(reservation);
     }
 } 
