@@ -16,8 +16,7 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class ReservationOptionService {
-    @Autowired
-    private ReservationService reservationService;
+
     @Autowired
     private OptionService optionService;
     @Autowired
@@ -62,7 +61,6 @@ public class ReservationOptionService {
         save(resOption);
         // Mise à jour du montant total
         reservation.setMontant(reservation.getMontant()+ prixOption.getPu());
-        reservationService.save(reservation);
         return resOption;
     }
     

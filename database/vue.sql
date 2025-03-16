@@ -24,6 +24,9 @@ join creneau c on rd.idcreneau = c.id;
 CREATE or replace view paiement_reservation as
 SELECT 
     p.*,
+    r.duree,
+    r.montant,
+    r.etat as etatReservation,
     r.dateReservation,
     r.espace as espace
 from paiement p
@@ -41,7 +44,7 @@ from creneau as c
 LEFT JOIN (
     SELECT * from 
     reservation_details_cpl r
-    WHERE dateReservation = '2025-01-14' and espace = 'or'
+    WHERE dateReservation = '2025-01-14' and espace = 'rubis'
 ) rdc on rdc.idcreneau = c.id
 ;
 

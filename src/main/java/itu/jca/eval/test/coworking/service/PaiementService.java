@@ -53,7 +53,7 @@ public class PaiementService {
         paiement.setId(values[0]);
         paiement.setDatePaiement(values[2]);
         paiement.setReservation(reservationService.findById(values[1]).orElseThrow(() -> new RuntimeException("Reservation non trouvée avec l'id: " + values[1])));
-        if (paiement.getReservation().getEtat() == ReservationEtat.RESERVER) {
+        if (paiement.getReservation().getEtat() == ReservationEtat.RESERVER.getEtat()) {
             reservationService.valider(paiement.getReservation());
         }
         createPaiement(paiement);
@@ -73,10 +73,10 @@ public class PaiementService {
     }
 
     public void controllerEtatReservationAvantPaiement(Reservation reservation) throws Exception{
-        if (reservation.getEtat() == ReservationEtat.RESERVER) {
+        if (reservation.getEtat() == ReservationEtat.RESERVER.getEtat()) {
             throw new Exception("La reservation doit etre valider avant d'etre payer");
         }
-        else if (reservation.getEtat().getEtat() >= ReservationEtat.PAYER.getEtat()) {
+        else if (reservation.getEtat() >= ReservationEtat.PAYER.getEtat()) {
             throw new Exception("La reservation a deja ete payer");
         }
     } 

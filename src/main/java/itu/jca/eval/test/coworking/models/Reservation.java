@@ -7,8 +7,6 @@ import itu.jca.eval.test.coworking.enums.ReservationEtat;
 import itu.jca.eval.test.coworking.utils.TimeUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -43,8 +41,7 @@ public class Reservation{
     private Espace espace;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.ORDINAL)
-    private ReservationEtat etat;
+    private int etat;
 
     public Reservation(){}
 
@@ -112,7 +109,7 @@ public class Reservation{
     }
 
     public void setEtat(ReservationEtat etat) {
-        this.etat = etat;
+        this.etat = etat.getEtat();
     }
 
     public void reserver() {setEtat(ReservationEtat.RESERVER);}

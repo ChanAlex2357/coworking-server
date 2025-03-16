@@ -1,3 +1,16 @@
+delete FROM RoleUtilisateur CASCADE;
+delete FROM Utilisateur CASCADE;
+delete FROM Account CASCADE;
+delete FROM Creneau CASCADE;
+delete from OptionPrix CASCADE;
+delete from Option CASCADE;
+delete from PrixEspace CASCADE;
+delete from Espace CASCADE;
+delete from Reservation CASCADE;
+delete from ReservationOption CASCADE;
+delete from Paiement CASCADE;
+delete from ReservationDetails CASCADE;
+
 -- Insertion des rôles
 INSERT INTO RoleUtilisateur (id, libelle) VALUES 
     (get_role_user_seq(), 'ADMIN'),
