@@ -65,4 +65,5 @@ INSERT INTO Creneau (id, heureDebut, heureFin) VALUES
     (get_creneau_seq(), '14:00:00', '15:00:00'),
     (get_creneau_seq(), '15:00:00', '16:00:00'),
     (get_creneau_seq(), '16:00:00', '17:00:00'),
-    (get_creneau_seq(), '17:00:00', '18:00:00');
+    (get_creneau_seq(), '17:00:00', '18:00:00'),
+    (get_creneau_seq(), '18:00:00', '19:00:00');

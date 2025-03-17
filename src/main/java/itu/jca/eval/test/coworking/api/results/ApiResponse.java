@@ -1,7 +1,5 @@
 package itu.jca.eval.test.coworking.api.results;
 
-import java.util.List;
-
 import itu.jca.eval.test.coworking.enums.ResponseStatus;
 import lombok.Data;
 

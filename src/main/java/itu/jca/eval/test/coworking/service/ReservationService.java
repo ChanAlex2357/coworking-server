@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import itu.jca.eval.test.coworking.dto.ReservationFormData;
+import itu.jca.eval.test.coworking.models.Creneau;
 import itu.jca.eval.test.coworking.models.Espace;
 import itu.jca.eval.test.coworking.models.Option;
 import itu.jca.eval.test.coworking.models.PrixEspace;
@@ -17,6 +19,8 @@ import itu.jca.eval.test.coworking.utils.ImportUtils;
 @Service
 public class ReservationService {
 
+    @Autowired
+    private CreneauService creneauService;
     @Autowired()
     private ReservationOptionService reservationOptionService;
     @Autowired
@@ -164,5 +168,24 @@ public class ReservationService {
     public Reservation validerPaiementReservation(Reservation reservation) {
         reservation.validerPaiement();
         return save(reservation);
+    }
+
+    public Reservation buildReservation(ReservationFormData formData){
+        // Recuperation des donnees associer
+        Espace espace =  espaceService.findByNom(formData.getEspaceName())
+        .orElseThrow(() -> new IllegalArgumentException("Espace invalide"));
+
+        Creneau creneau = creneauService.findById(formData.getHeureDebut())
+        .orElseThrow(()->new IllegalArgumentException("Creneau invalide"));
+        
+        Utilisateur utilisateur = utilisateurService.findById(formData.getUserId())
+        .orElseThrow(()-> new IllegalArgumentException("Utilisateur invalide"));
+
+        Reservation reservation = new Reservation(formData.getDateReservation(),creneau.getHeureDebut(), formData.getDuree(), utilisateur, espace);
+        return reservation;
+    }
+    public Reservation createReservation(ReservationFormData reservationFormData) {
+        Reservation reservation = buildReservation(reservationFormData);
+        return createReservation(reservation);
     }
 } 

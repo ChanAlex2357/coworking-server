@@ -7,6 +7,8 @@ import itu.jca.eval.test.coworking.enums.ReservationEtat;
 import itu.jca.eval.test.coworking.utils.TimeUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -18,6 +20,7 @@ import lombok.Getter;
 @Table(name = "reservation")
 public class Reservation{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "datereservation", nullable = false)
@@ -42,6 +45,14 @@ public class Reservation{
 
     @Column(nullable = false)
     private int etat;
+
+    public Reservation(Date dateReservation, Time heureDebut, int duree, Utilisateur client, Espace espace) {
+        this.dateReservation = dateReservation;
+        this.heureDebut = heureDebut;
+        this.duree = duree;
+        this.client = client;
+        this.espace = espace;
+    }
 
     public Reservation(){}
 

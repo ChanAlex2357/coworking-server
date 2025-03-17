@@ -25,4 +25,8 @@ public class UtilisateurService {
     public Utilisateur save(Utilisateur utilisateur) {
         return utilisateurRepository.save(utilisateur);
     }
+
+    public Optional<Utilisateur> findById(String id){
+        return utilisateurRepository.findById(id);
+    }
 } 

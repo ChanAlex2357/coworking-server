@@ -8,25 +8,24 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import itu.jca.eval.test.coworking.api.builder.ApiResponseBuilder;
-import itu.jca.eval.test.coworking.models.Option;
-import itu.jca.eval.test.coworking.service.OptionService;
+import itu.jca.eval.test.coworking.models.Creneau;
+import itu.jca.eval.test.coworking.service.CreneauService;
 
 @RestController
-@RequestMapping(path = "/api/options")
+@RequestMapping(path = "/api/creneaux")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class OptionController {
-
+public class CreneauController {
+    
     @Autowired
-    private OptionService optionService;
+    private CreneauService creneauService;
 
     @GetMapping
-    public ResponseEntity<?> findOptions(){
-        List<Option> options = null;
+    public ResponseEntity<?> findCreneaux(){
+        List<Creneau> creneax = null;
         try {
-            options = optionService.findAll();
-            return ResponseEntity.ok().body(ApiResponseBuilder.success("options finded successfully!", options));
+            creneax = creneauService.findAll();
+            return ResponseEntity.ok().body(ApiResponseBuilder.success("creneaux finded successfully!", creneax));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(ApiResponseBuilder.error500(e));
