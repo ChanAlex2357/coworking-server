@@ -1,4 +1,4 @@
-package itu.jca.eval.test.coworking.controller;
+package itu.jca.eval.test.coworking.controller.rest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
