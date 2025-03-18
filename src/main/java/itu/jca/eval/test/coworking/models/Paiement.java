@@ -3,11 +3,14 @@ package itu.jca.eval.test.coworking.models;
 import java.util.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import itu.jca.eval.test.coworking.enums.PaiementEtat;
 import itu.jca.eval.test.coworking.utils.TimeUtils;
 @Getter
 @Entity
@@ -22,6 +25,10 @@ public class Paiement {
     @ManyToOne
     @JoinColumn(name = "idreservation", nullable = false)
     private Reservation reservation;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    private PaiementEtat etat;
 
     public void setId(String id) {
         this.id = id;
@@ -38,4 +45,16 @@ public class Paiement {
     public void setDatePaiement(String datePaiement) {
         setDatePaiement(TimeUtils.formatDate(datePaiement));
     }
+    
+    public void setEtat(PaiementEtat etat) {
+        this.etat = etat;
+    }
+
+    public void payer(){
+        setEtat(PaiementEtat.PAYER);
+    }
+    public void valider(){
+        setEtat(PaiementEtat.VALIDER);
+    }
+
 } 

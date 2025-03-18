@@ -1,21 +1,35 @@
 package itu.jca.eval.test.coworking.service;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import itu.jca.eval.test.coworking.ModelService;
+import itu.jca.eval.test.coworking.dto.ReservationFormData;
+import itu.jca.eval.test.coworking.models.Creneau;
 import itu.jca.eval.test.coworking.models.Espace;
+import itu.jca.eval.test.coworking.models.Option;
 import itu.jca.eval.test.coworking.models.PrixEspace;
 import itu.jca.eval.test.coworking.models.Reservation;
 import itu.jca.eval.test.coworking.models.Utilisateur;
 import itu.jca.eval.test.coworking.repository.ReservationRepository;
 import itu.jca.eval.test.coworking.utils.ImportUtils;
+import itu.jca.eval.test.coworking.utils.TimeUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @Service
-public class ReservationService {
+public class ReservationService extends ModelService {
+
     @Autowired
+    private OptionService optionService;
+
+    @Autowired
+    private CreneauService creneauService;
+    @Autowired()
     private ReservationOptionService reservationOptionService;
     @Autowired
     private  UtilisateurService utilisateurService;
@@ -28,6 +42,13 @@ public class ReservationService {
     private ReservationDetailsService reservationDetailsService;
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    ReservationService() {
+        super("RES", "reservation_seq");
+    }
 
     public List<Reservation> findAll() {
         return reservationRepository.findAll();
@@ -43,6 +64,7 @@ public class ReservationService {
 
     public Reservation save(Reservation reservation) {
         controllerMontant(reservation);
+        controllerHeureReservation(reservation);
         return reservationRepository.save(reservation);
     }
 
@@ -104,6 +126,11 @@ public class ReservationService {
         reservation.setDateReservation(dateStr);
         reservation.setHeureDebut(heureDebut);
         reservation.setDuree(duree);
+        setEspaceFromName(espaceName, reservation);
+
+        Time heureFin = TimeUtils.add(reservation.getHeureDebut(),reservation.getDuree(),0,0);
+        reservation.setHeureFin(heureFin);
+
         System.out.println("RESERVATION BASE");
         try {
             setClientFromContact(clientContact, reservation);
@@ -118,12 +145,93 @@ public class ReservationService {
                 throw eClient;
             }
         }
-        setEspaceFromName(espaceName, reservation);
         // Sauvegarde de la réservation
+        reservation = createReservation(reservation, optionsStr);
+        return reservation;
+    }
+
+    public void controllerHeureReservation(Reservation reservation){
+        Time heureDebut = reservation.getHeureDebut();
+        Time heureFin = reservation.getHeureFin();
+        if (heureDebut != null && heureFin == null) {
+            heureFin = TimeUtils.add(heureDebut,reservation.getDuree(),0,0);
+            reservation.setHeureFin(heureFin);
+        }
+    }
+
+    public Reservation createReservation(Reservation reservation,String options) throws Exception{
+        reservation = createReservation(reservation);
+        reservationOptionService.loadReservationOptions(options,reservation);
         reservation = save(reservation);
-        reservationOptionService.loadReservationOptions(optionsStr,reservation);
+        return reservation;
+    }
+    
+    public Reservation createReservation(Reservation reservation , Option[] options){
+        reservation = createReservation(reservation);
+        reservationOptionService.createReservationOptions(options, reservation);
+        return save(reservation);
+    }
+    public Reservation createReservation(Reservation reservation , String[] options) {
+        reservation = createReservation(reservation);
+        reservationOptionService.createReservationOptions(options, reservation);
+        return save(reservation);
+    }
+    
+    public void controllerId(Reservation reservation){
+
+    }
+    public Reservation createReservation(Reservation reservation) {
+        reservation.reserver();
+        if (reservation.getId() == null || reservation.getId().isEmpty()) {
+            reservation.setId(generateId());
+        }
         reservation = save(reservation);
         reservationDetailsService.loadReservationDetails(reservation);
         return reservation;
     }
-} 
+
+    public Reservation valider(Reservation reservation) {
+        reservation.valider();
+        return save(reservation);
+    }
+
+    public Reservation payer(Reservation reservation) {
+        reservation.payer();
+        return save(reservation);
+    }
+
+    public Reservation validerPaiementReservation(Reservation reservation) {
+        reservation.validerPaiement();
+        return save(reservation);
+    }
+    public Reservation annuler(Reservation reservation) {
+        reservation.annuler();
+        return save(reservation);
+    }
+
+    public Reservation buildReservation(ReservationFormData formData){
+        // Recuperation des donnees associer
+        Espace espace =  espaceService.findByNom(formData.getEspaceName())
+        .orElseThrow(() -> new IllegalArgumentException("Espace invalide"));
+
+        Creneau creneau = creneauService.findById(formData.getHeureDebut())
+        .orElseThrow(()->new IllegalArgumentException("Creneau invalide"));
+        
+        Utilisateur utilisateur = utilisateurService.findById(formData.getUserId())
+        .orElseThrow(()-> new IllegalArgumentException("Utilisateur invalide"));
+
+        Time heureFin = creneauService.findCreneauByTimeStart(TimeUtils.add(creneau.getHeureDebut(), formData.getDuree(), 0, 0)).getHeureDebut();
+        Reservation reservation = new Reservation(formData.getDateReservation(),creneau.getHeureDebut(),heureFin, formData.getDuree(), utilisateur, espace);
+        return reservation;
+    }
+    public Reservation createReservation(ReservationFormData reservationFormData) {
+        Reservation reservation = buildReservation(reservationFormData);
+        reservation = createReservation(reservation,optionService.buildOptions(reservationFormData));
+        return reservation;
+    }
+
+    public List<Reservation> findByClient(String userId) {
+        Utilisateur  u = utilisateurService.findById(userId).orElseThrow(()->new IllegalArgumentException("Utilisateur invalide"));
+        return reservationRepository.findByClient(u);
+    }
+}

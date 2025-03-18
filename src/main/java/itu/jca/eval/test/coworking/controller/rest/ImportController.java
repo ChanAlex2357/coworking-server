@@ -1,4 +1,4 @@
-package itu.jca.eval.test.coworking.controller;
+package itu.jca.eval.test.coworking.controller.rest;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

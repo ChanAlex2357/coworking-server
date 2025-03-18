@@ -16,11 +16,9 @@ public class AccountService {
     public Account authentication(String login , String password)throws Exception {
         Account account = null;
         List<Account> accounts  = accountRepository.findByLogin(login);
-
-        if (accounts.size() < 0) {
+        if (accounts.size() <= 0) {
             throw new Exception("Authentication failed  login is incorect");
         }
-        
         account = accounts.get(0);
         boolean auth = account.checkPassword(password);
         if (!auth) {

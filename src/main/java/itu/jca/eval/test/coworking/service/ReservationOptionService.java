@@ -11,9 +11,12 @@ import itu.jca.eval.test.coworking.models.Option;
 import itu.jca.eval.test.coworking.models.PrixOption;
 import itu.jca.eval.test.coworking.models.Reservation;
 import itu.jca.eval.test.coworking.repository.ReservationOptionRepository;
+import jakarta.transaction.Transactional;
 
 @Service
+@Transactional
 public class ReservationOptionService {
+
     @Autowired
     private OptionService optionService;
     @Autowired
@@ -49,7 +52,7 @@ public class ReservationOptionService {
         throw new RuntimeException("Option de réservation non trouvée avec l'id: " + id);
     }
 
-    public ReservationOption save(Option option,Reservation reservation) throws Exception {
+    public ReservationOption createReservationOption(Option option,Reservation reservation) {
         PrixOption prixOption = prixOptionService.findCurrentOptionPrix(option);
         ReservationOption resOption = new ReservationOption();
         resOption.setOption(option);
@@ -61,20 +64,35 @@ public class ReservationOptionService {
         return resOption;
     }
     
-    public ReservationOption[] loadReservationOptions(String optionsStr,Reservation reservation) throws Exception {
+    public ReservationOption createReservationOption(String optionId , Reservation reservation) {
+        String id = optionId.trim().toUpperCase();
+        Option option = optionService.findById(id);
+        return createReservationOption(option, reservation);
+    }
+
+    public ReservationOption[] createReservationOptions(Option[] options , Reservation reservation){
+        ReservationOption[] reservationOptions = new ReservationOption[options.length];
+        for (int i = 0 ; i < options.length ; i++) {
+            reservationOptions[i] = createReservationOption(options[i], reservation);
+        }
+        return reservationOptions;
+    }
+    
+    public ReservationOption[] createReservationOptions(String[] options , Reservation reservation){
+        ReservationOption[] reservationOptions = new ReservationOption[options.length];
+        for (int i = 0 ; i < options.length ; i++) {
+            reservationOptions[i] = createReservationOption(options[i], reservation);
+        }
+        return reservationOptions;
+    }
+    
+    public ReservationOption[] loadReservationOptions(String optionsStr,Reservation reservation) {
         // Traitement des options
         ReservationOption[] reservationOptions = null;
         if (!optionsStr.isEmpty() && !optionsStr.equals("\"\"")) {
             String[] optionIds = optionsStr.replace("\"", "").split(",");
-            reservationOptions = new ReservationOption[optionIds.length];
             System.out.println("OPTIONS LENGTH : "+optionIds.length);
-            for (int i = 0; i < optionIds.length; i+=1) {
-                String optionId = optionIds[i].trim().toUpperCase();
-                Option option = 
-                    optionService.findById(optionId)
-                    .orElseThrow(() -> new RuntimeException("Option non trouvée: " + optionId));
-                reservationOptions[i] = save(option,reservation);
-            }
+            reservationOptions = createReservationOptions(optionIds, reservation);
         }
         return reservationOptions;
     }

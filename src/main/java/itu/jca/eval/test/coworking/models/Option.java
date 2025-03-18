@@ -17,6 +17,10 @@ public class Option {
     private String option;
 
 
+    public Option(String id, String option) {
+        this.id = id;
+        this.option = option;
+    }
     public Option(){}
     public Option(String[] values) {
         setId(values[0].trim());

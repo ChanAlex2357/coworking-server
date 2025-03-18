@@ -1,11 +1,12 @@
 package itu.jca.eval.test.coworking.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import itu.jca.eval.test.coworking.dto.ReservationFormData;
+import itu.jca.eval.test.coworking.dto.models.OpitionSelectData;
 import itu.jca.eval.test.coworking.models.Option;
 import itu.jca.eval.test.coworking.repository.OptionRepository;
 import itu.jca.eval.test.coworking.models.PrixOption;
@@ -31,8 +32,8 @@ public class OptionService {
         return optionRepository.findAll();
     }
 
-    public Optional<Option> findById(String id) {
-        return optionRepository.findById(id);
+    public Option findById(String id) {
+        return optionRepository.findById(id).orElseThrow(() -> new RuntimeException("Option non trouvée: " + id));
     }
 
     public Option save(Option option) {
@@ -50,5 +51,15 @@ public class OptionService {
             return optionRepository.save(option);
         }
         throw new RuntimeException("Option non trouvée avec l'id: " + id);
+    }
+
+    public Option[] buildOptions(ReservationFormData reservationFormData){
+        ArrayList<Option> options = new ArrayList<>();
+        for( OpitionSelectData selectedOption : reservationFormData.getOptions()){
+            if (selectedOption.isSelected()) {
+                options.add(new Option(selectedOption.getId(),selectedOption.getOption()));
+            }
+        }
+        return options.toArray(new Option[0]);
     }
 } 

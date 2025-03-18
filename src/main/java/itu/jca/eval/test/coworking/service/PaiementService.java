@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import itu.jca.eval.test.coworking.enums.ReservationEtat;
 import itu.jca.eval.test.coworking.models.Paiement;
 import itu.jca.eval.test.coworking.models.Reservation;
 import itu.jca.eval.test.coworking.repository.PaiementRepository;
@@ -52,6 +53,29 @@ public class PaiementService {
         paiement.setId(values[0]);
         paiement.setDatePaiement(values[2]);
         paiement.setReservation(reservationService.findById(values[1]).orElseThrow(() -> new RuntimeException("Reservation non trouvée avec l'id: " + values[1])));
-        save(paiement);
+        if (paiement.getReservation().getEtat() <= ReservationEtat.RESERVER.getEtat()) {
+            reservationService.valider(paiement.getReservation());
+            System.out.println("UPdate etat! "+paiement.getReservation().getEtat());
+        }
+        createPaiement(paiement);
     }
+
+    public Paiement createPaiement(Paiement paiement) throws Exception {
+        controllerEtatReservationAvantPaiement(paiement.getReservation());
+        paiement.payer();
+        reservationService.payer(paiement.getReservation());
+        return save(paiement);
+    }
+
+    public Paiement valider(Paiement paiement) throws Exception {
+        paiement.valider();
+        reservationService.validerPaiementReservation(paiement.getReservation());
+        return save(paiement);
+    }
+
+    public void controllerEtatReservationAvantPaiement(Reservation reservation) throws Exception{
+        if (reservation.getEtat() >= ReservationEtat.PAYER.getEtat()) {
+            throw new Exception("La reservation a deja ete payer");
+        }
+    } 
 } 
