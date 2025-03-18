@@ -7,8 +7,6 @@ import itu.jca.eval.test.coworking.enums.ReservationEtat;
 import itu.jca.eval.test.coworking.utils.TimeUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,7 +18,6 @@ import lombok.Getter;
 @Table(name = "reservation")
 public class Reservation{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     @Column(name = "datereservation", nullable = false)
@@ -28,6 +25,9 @@ public class Reservation{
 
     @Column(name = "heuredebut", nullable = false)
     private Time heureDebut;
+
+    @Column(name = "heurefin", nullable = false)
+    private Time heureFin;
 
     @Column(nullable = false)
     private int duree;
@@ -46,6 +46,7 @@ public class Reservation{
     @Column(nullable = false)
     private int etat;
 
+    public Reservation(){}
     public Reservation(Date dateReservation, Time heureDebut, int duree, Utilisateur client, Espace espace) {
         this.dateReservation = dateReservation;
         this.heureDebut = heureDebut;
@@ -53,8 +54,15 @@ public class Reservation{
         this.client = client;
         this.espace = espace;
     }
+    public Reservation(Date dateReservation, Time heureDebut,Time heureFin, int duree, Utilisateur client, Espace espace) {
+        this(dateReservation, heureDebut, duree, client, espace);
+        this.heureFin = heureFin;
+    }
+    public Reservation(Date dateReservation,Creneau creneau, int duree, Utilisateur client, Espace espace) {
+        this(dateReservation, creneau.getHeureDebut(), creneau.getHeureFin(), duree, client, espace);
+    }
+    
 
-    public Reservation(){}
 
     public void setId(String id) {
         this.id = id;
@@ -98,11 +106,20 @@ public class Reservation{
         }
         setDateReservation(TimeUtils.formatDate(dateReservation));
     }
+    public void setHeureFin(Time heureFin) {
+        this.heureFin = heureFin;
+    }
     public void setHeureDebut(String heureDebut) {
         if (heureDebut == null) {
             throw new IllegalArgumentException("L'heure de debut ne peut pas être nulle");
         }
         setHeureDebut(TimeUtils.formatTime(heureDebut));
+    }
+    public void setHeureFin(String heureFin) {
+        if (heureFin == null) {
+            return;
+        }
+        setHeureFin(TimeUtils.formatTime(heureFin));
     }
     public void setDuree(String duree) {
         if (duree == null) {
@@ -124,8 +141,9 @@ public class Reservation{
     }
 
     public void reserver() {setEtat(ReservationEtat.RESERVER);}
-    public void valider() {setEtat(ReservationEtat.RESERVER);}
+    public void valider() {setEtat(ReservationEtat.VALIDER);}
     public void payer() {setEtat(ReservationEtat.PAYER);}
     public void validerPaiement(){setEtat(ReservationEtat.VALIDER_PAIEMENT);}
+    public void annuler() {setEtat(ReservationEtat.ANNULER);}
 
-} 
+}

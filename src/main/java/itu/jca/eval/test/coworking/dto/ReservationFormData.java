@@ -12,5 +12,5 @@ public class ReservationFormData {
     Date dateReservation;
     int duree;
     String heureDebut;
-    OpitionSelectData[] opitions;
+    OpitionSelectData[] options;
 }

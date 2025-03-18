@@ -9,4 +9,4 @@ import itu.jca.eval.test.coworking.models.Reservation;
 @Repository
 public interface PaiementRepository extends JpaRepository<Paiement, String> {
     List<Paiement> findByReservation(Reservation reservation);
-} 
+}

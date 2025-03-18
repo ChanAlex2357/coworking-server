@@ -18,9 +18,9 @@ INSERT INTO RoleUtilisateur (id, libelle) VALUES
 
 -- Insertion des utilisateurs
 INSERT INTO Utilisateur (id, nom,contact) VALUES 
-    (get_utilisateur_seq(), 'Admin Principal','0381034567'),    -- admin
-    (get_utilisateur_seq(), 'Jean Client','22222222'),        -- client 1
-    (get_utilisateur_seq(), 'Marie Cliente','33333333');      -- client 2
+    (get_utilisateur_seq(), 'Admin Principal','123456789'),    -- admin
+    (get_utilisateur_seq(), 'Jean Client','0381034567'),        -- client 1
+    (get_utilisateur_seq(), 'Marie Cliente','0349049881');      -- client 2
 
 -- Insertion des comptes
 -- Note: remplacer les références (USR_1, ROLE_1, etc.) par les IDs réels générés
@@ -37,7 +37,7 @@ WHERE u.nom = 'Admin Principal' AND r.libelle = 'ADMIN';
 INSERT INTO Account (id, login, password, idUtilisateur, idRole) 
 SELECT 
     get_account_seq(),
-    'jean@client.com',
+    '0381034567',
     'client123',
     u.id,
     r.id
@@ -47,7 +47,7 @@ WHERE u.nom = 'Jean Client' AND r.libelle = 'CLIENT';
 INSERT INTO Account (id, login, password, idUtilisateur, idRole) 
 SELECT 
     get_account_seq(),
-    'marie@client.com',
+    '0349049881',
     'client123',
     u.id,
     r.id

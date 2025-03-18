@@ -40,6 +40,7 @@ public class AccountController {
             Account account = accountService.authentication(accountDto.getLogin(), accountDto.getPassword());
             return ResponseEntity.ok(account);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
